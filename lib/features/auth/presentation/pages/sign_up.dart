@@ -34,17 +34,15 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          // TODO: implement listener
+          if (state is AuthFailure) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+          }
         },
         builder: (context, state) {
           if (state is AuthLoading) {
             return const Center(
               child: CircularProgressIndicator(),
-            );
-          }
-          if (state is AuthFailure) {
-            return Center(
-              child: Text(state.message),
             );
           }
 
