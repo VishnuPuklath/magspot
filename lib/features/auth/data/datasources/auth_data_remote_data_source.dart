@@ -1,11 +1,12 @@
 import 'package:magspot/core/error/exceptions.dart';
 import 'package:magspot/core/error/failure.dart';
+import 'package:magspot/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthDataRemoteDataSource {
-  Future<String> signUpWithEmailAndPassword(
+  Future<UserModel> signUpWithEmailAndPassword(
       {required String name, required String email, required String password});
-  Future<String> loginWithEmailAndPassword(
+  Future<UserModel> loginWithEmailAndPassword(
       {required String email, required String password});
 }
 
@@ -15,15 +16,24 @@ class AuthDataRemoteDataSourceImpl implements AuthDataRemoteDataSource {
   AuthDataRemoteDataSourceImpl({required this.supabaseClient});
 
   @override
-  Future<String> loginWithEmailAndPassword({
+  Future<UserModel> loginWithEmailAndPassword({
     required String email,
     required String password,
-  }) {
-    throw UnimplementedError();
+  }) async {
+    try {
+      final response = await supabaseClient.auth
+          .signInWithPassword(email: email, password: password);
+      if (response.user == null) {
+        throw ServerException(message: 'User is null');
+      }
+      return UserModel.fromJson(response.user!.toJson());
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
   }
 
   @override
-  Future<String> signUpWithEmailAndPassword({
+  Future<UserModel> signUpWithEmailAndPassword({
     required String name,
     required String email,
     required String password,
@@ -35,7 +45,7 @@ class AuthDataRemoteDataSourceImpl implements AuthDataRemoteDataSource {
       if (response.user == null) {
         throw ServerException(message: 'User is null');
       }
-      return response.user!.id;
+      return UserModel.fromJson(response.user!.toJson());
     } catch (e) {
       throw ServerException(message: e.toString());
     }

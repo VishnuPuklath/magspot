@@ -3,6 +3,7 @@ import 'package:magspot/core/secrets/app_dart.dart';
 import 'package:magspot/features/auth/data/datasources/auth_data_remote_data_source.dart';
 import 'package:magspot/features/auth/data/repository/auth_repositor_impl.dart';
 import 'package:magspot/features/auth/domain/repository/auth_repository.dart';
+import 'package:magspot/features/auth/domain/usecases/user_login.dart';
 import 'package:magspot/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,7 +32,11 @@ void _initAuth() {
     () => UserSignUp(authRepository: serviceLocator()),
   );
 
+  serviceLocator.registerFactory(
+    () => UserLogin(authRepository: serviceLocator()),
+  );
+
   serviceLocator.registerLazySingleton(
-    () => AuthBloc(userSignUp: serviceLocator()),
+    () => AuthBloc(userSignUp: serviceLocator(), userLogin: serviceLocator()),
   );
 }

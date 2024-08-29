@@ -2,6 +2,7 @@ import 'package:fpdart/src/either.dart';
 import 'package:magspot/core/error/exceptions.dart';
 import 'package:magspot/core/error/failure.dart';
 import 'package:magspot/features/auth/data/datasources/auth_data_remote_data_source.dart';
+import 'package:magspot/features/auth/domain/entities/user.dart';
 import 'package:magspot/features/auth/domain/repository/auth_repository.dart';
 
 class AuthRepositorImpl implements AuthRepository {
@@ -10,23 +11,37 @@ class AuthRepositorImpl implements AuthRepository {
   AuthRepositorImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, String>> loginWIthEmailAndPassword(
-      {required String email, required String password}) {
-    // TODO: implement loginWIthEmailAndPassword
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, String>> signUpWIthEmailAndPassword(
-      {required String name,
-      required String email,
-      required String password}) async {
+  Future<Either<Failure, User>> loginWIthEmailAndPassword(
+      {required String email, required String password}) async {
     try {
-      final userId = await remoteDataSource.signUpWithEmailAndPassword(
-          name: name, email: email, password: password);
-      return right(userId);
+      final userModel = await remoteDataSource.loginWithEmailAndPassword(
+          email: email, password: password);
+      return right(userModel);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, User>> signUpWIthEmailAndPassword(
+      {required String name,
+      required String email,
+      required String password}) async {
+    try {
+      final userModel = await remoteDataSource.signUpWithEmailAndPassword(
+          name: name, email: email, password: password);
+      return right(userModel);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  // Future<Either<Failure, User>> _getUser(Future<User> Function() fn) async {
+  //   try {
+  //     final user = await fn();
+  //     return right(user);
+  //   } on ServerException catch (e) {
+  //     return left(Failure(e.message));
+  //   }
+  // }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:magspot/core/common/widgets/loader.dart';
 import 'package:magspot/core/theme/app_pallete.dart';
+import 'package:magspot/core/utils/show_snack_bar.dart';
 import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/auth/presentation/pages/sign_in.dart';
 import 'package:magspot/features/auth/presentation/widgets/auth_field.dart';
@@ -35,15 +37,12 @@ class _SignUpPageState extends State<SignUpPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.message)));
+            showSnackBar(context, state.message);
           }
         },
         builder: (context, state) {
           if (state is AuthLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Loader();
           }
 
           return Padding(
@@ -83,7 +82,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     buttonText: 'SignUp',
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        print('onpressed activated');
                         context.read<AuthBloc>().add(
                               AuthSignUp(
                                 name: _nameController.text.trim(),
