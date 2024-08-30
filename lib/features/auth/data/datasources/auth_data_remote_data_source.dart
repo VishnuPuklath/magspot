@@ -4,16 +4,22 @@ import 'package:magspot/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthDataRemoteDataSource {
+  Session? get currentUser;
   Future<UserModel> signUpWithEmailAndPassword(
       {required String name, required String email, required String password});
   Future<UserModel> loginWithEmailAndPassword(
       {required String email, required String password});
+
+  Future<UserModel?> getCurrentUser();
 }
 
 class AuthDataRemoteDataSourceImpl implements AuthDataRemoteDataSource {
   final SupabaseClient supabaseClient;
 
   AuthDataRemoteDataSourceImpl({required this.supabaseClient});
+
+  @override
+  Session? get currentUser => supabaseClient.auth.currentSession;
 
   @override
   Future<UserModel> loginWithEmailAndPassword({
@@ -46,6 +52,22 @@ class AuthDataRemoteDataSourceImpl implements AuthDataRemoteDataSource {
         throw ServerException(message: 'User is null');
       }
       return UserModel.fromJson(response.user!.toJson());
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel?> getCurrentUser() async {
+    try {
+      if (currentUser != null) {
+        final uid = currentUser!.user.id;
+        final userModel =
+            await supabaseClient.from('profiles').select().eq('id', uid);
+        return UserModel.fromJson(userModel.first)
+            .copyWith(email: currentUser!.user.email);
+      }
+      throw ServerException(message: 'User is not logged in');
     } catch (e) {
       throw ServerException(message: e.toString());
     }

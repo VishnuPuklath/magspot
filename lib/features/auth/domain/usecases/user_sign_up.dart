@@ -1,7 +1,7 @@
 import 'package:fpdart/src/either.dart';
 import 'package:magspot/core/error/failure.dart';
 import 'package:magspot/core/usecase/usecase.dart';
-import 'package:magspot/features/auth/domain/entities/user.dart';
+import 'package:magspot/core/entities/user.dart';
 import 'package:magspot/features/auth/domain/repository/auth_repository.dart';
 
 class UserSignUp implements Usecase<User, UserSignUpParams> {
