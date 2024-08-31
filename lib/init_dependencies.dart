@@ -7,6 +7,7 @@ import 'package:magspot/features/auth/domain/repository/auth_repository.dart';
 import 'package:magspot/features/auth/domain/usecases/current_user.dart';
 import 'package:magspot/features/auth/domain/usecases/user_login.dart';
 import 'package:magspot/features/auth/domain/usecases/user_sign_up.dart';
+import 'package:magspot/features/auth/domain/usecases/user_signout.dart';
 import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -44,9 +45,12 @@ void _initAuth() {
   serviceLocator.registerFactory(
     () => CurrentUser(authRepository: serviceLocator()),
   );
-
+  serviceLocator.registerFactory(
+    () => UserSignout(authRepository: serviceLocator()),
+  );
   serviceLocator.registerLazySingleton(
     () => AuthBloc(
+        userSignOut: serviceLocator(),
         userSignUp: serviceLocator(),
         userLogin: serviceLocator(),
         currentUser: serviceLocator(),

@@ -1,5 +1,4 @@
 import 'package:magspot/core/error/exceptions.dart';
-import 'package:magspot/core/error/failure.dart';
 import 'package:magspot/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -11,6 +10,7 @@ abstract interface class AuthDataRemoteDataSource {
       {required String email, required String password});
 
   Future<UserModel?> getCurrentUser();
+  Future<UserModel?> signOut();
 }
 
 class AuthDataRemoteDataSourceImpl implements AuthDataRemoteDataSource {
@@ -62,12 +62,26 @@ class AuthDataRemoteDataSourceImpl implements AuthDataRemoteDataSource {
     try {
       if (currentUser != null) {
         final uid = currentUser!.user.id;
+
         final userModel =
             await supabaseClient.from('profiles').select().eq('id', uid);
         return UserModel.fromJson(userModel.first)
             .copyWith(email: currentUser!.user.email);
       }
-      throw ServerException(message: 'User is not logged in');
+
+      return null;
+    } catch (e) {
+      print(e.toString());
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel?> signOut() async {
+    try {
+      await supabaseClient.auth.signOut();
+
+      return null;
     } catch (e) {
       throw ServerException(message: e.toString());
     }

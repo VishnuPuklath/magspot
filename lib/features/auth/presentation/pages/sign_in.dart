@@ -7,6 +7,8 @@ import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/auth/presentation/pages/sign_up.dart';
 import 'package:magspot/features/auth/presentation/widgets/auth_field.dart';
 import 'package:magspot/features/auth/presentation/widgets/auth_gradient_button.dart';
+import 'package:magspot/features/magazine/presentation/pages/bottom_nav_page.dart';
+import 'package:magspot/features/magazine/presentation/pages/magazine_page.dart';
 
 class LoginPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -25,7 +27,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _emailController.dispose();
 
@@ -40,7 +41,18 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthFailure) {
-              return showSnackBar(context, state.message);
+              if (state.message != 'User not logged in') {
+                return showSnackBar(context, state.message);
+              }
+            }
+            if (state is AuthSuccess) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BottomNavPage(),
+                ),
+                (route) => false,
+              );
             }
           },
           builder: (context, state) {
