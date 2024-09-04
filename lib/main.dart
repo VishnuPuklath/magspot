@@ -4,6 +4,7 @@ import 'package:magspot/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:magspot/core/theme/theme.dart';
 import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/auth/presentation/pages/sign_in.dart';
+import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
 import 'package:magspot/features/magazine/presentation/pages/bottom_nav_page.dart';
 import 'package:magspot/features/magazine/presentation/pages/magazine_page.dart';
 import 'package:magspot/init_dependencies.dart';
@@ -18,6 +19,9 @@ void main() async {
     ),
     BlocProvider(
       create: (_) => serviceLocator<AuthBloc>(),
+    ),
+    BlocProvider(
+      create: (_) => serviceLocator<MagBlocBloc>(),
     )
   ], child: MyApp()));
 }

@@ -4,3 +4,17 @@ part of 'mag_bloc_bloc.dart';
 sealed class MagBlocState {}
 
 final class MagBlocInitial extends MagBlocState {}
+
+final class MagBlocLoading extends MagBlocState {}
+
+final class MagBlocFailure extends MagBlocState {
+  final String error;
+
+  MagBlocFailure(this.error);
+}
+
+final class MagBlocSuccess extends MagBlocState {
+  final Magazine magazine;
+
+  MagBlocSuccess({required this.magazine});
+}
