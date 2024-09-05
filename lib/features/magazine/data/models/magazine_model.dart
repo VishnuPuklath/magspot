@@ -4,18 +4,19 @@ class MagazineModel extends Magazine {
   MagazineModel({
     required super.id,
     required super.name,
-    required super.authorName,
+    required super.authorname,
     required super.description,
     required super.file,
     required super.posterId,
   });
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'id': id,
       'name': name,
-      'authorName': authorName,
+      'authorname': authorname,
       'description': description,
       'file': file,
+      'posterid': posterId
     };
   }
 
@@ -23,7 +24,7 @@ class MagazineModel extends Magazine {
     return MagazineModel(
         id: map['id'] ?? '',
         name: map['name'] ?? '',
-        authorName: map['authorName'] ?? '',
+        authorname: map['authorname'] ?? '',
         description: map['description'] ?? '',
         file: map['file'] ?? '',
         posterId: map['posterId'] ?? '');
@@ -31,7 +32,7 @@ class MagazineModel extends Magazine {
   MagazineModel copyWith({
     String? id,
     String? name,
-    String? authorName,
+    String? authorname,
     String? description,
     String? file,
     String? posterId,
@@ -39,7 +40,7 @@ class MagazineModel extends Magazine {
     return MagazineModel(
       id: id ?? this.id,
       name: name ?? this.name,
-      authorName: authorName ?? this.authorName,
+      authorname: authorname ?? this.authorname,
       description: description ?? this.description,
       file: file ?? this.file,
       posterId: posterId ?? this.posterId,

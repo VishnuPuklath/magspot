@@ -12,12 +12,14 @@ class UploadMagazine implements Usecase<Magazine, UploadMagParams> {
   UploadMagazine({required this.magazineRepository});
   @override
   Future<Either<Failure, Magazine>> call(params) async {
+    print('usecase executed');
     return await magazineRepository.uploadMagazine(
-        pdf: params.file,
-        name: params.name,
-        authorName: params.authorname,
-        description: params.description,
-        posterId: params.posterId);
+      pdf: params.file,
+      name: params.name,
+      authorName: params.authorname,
+      description: params.description,
+      posterId: params.posterId,
+    );
   }
 }
 

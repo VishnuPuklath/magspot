@@ -24,13 +24,17 @@ class MagazineRepositoryImpl implements MagazineRepository {
       MagazineModel magazineModel = MagazineModel(
           id: const Uuid().v1(),
           name: name,
-          authorName: authorName,
+          authorname: authorName,
           description: description,
           file: '',
           posterId: posterId);
+      print('impl le poster id is $posterId');
       final imageUrl = await magazineRemoteDataSource.uploadMagazinePdf(
           file: pdf, magazineModel: magazineModel);
-      magazineModel.copyWith(file: imageUrl);
+
+      magazineModel = magazineModel.copyWith(file: imageUrl);
+      Map<String, dynamic> map = magazineModel.toMap();
+      print('rep impl is $map');
       final magData =
           await magazineRemoteDataSource.uploadMagazine(magazineModel);
       return right(magData);

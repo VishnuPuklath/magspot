@@ -18,12 +18,18 @@ class MagazineRemoteDataSourceImpl implements MagazineRemoteDataSource {
   @override
   Future<MagazineModel> uploadMagazine(MagazineModel magazine) async {
     try {
+      Map<String, dynamic> map = magazine.toMap();
+      print('map is$map');
       final magData = await supabaseClient
           .from('magazine')
           .insert(magazine.toMap())
           .select();
       return MagazineModel.fromMap(magData.first);
+    } on PostgrestException catch (e) {
+      print(e.toString());
+      throw ServerException(message: e.toString());
     } catch (e) {
+      print(e.toString());
       throw ServerException(message: e.toString());
     }
   }
@@ -38,7 +44,11 @@ class MagazineRemoteDataSourceImpl implements MagazineRemoteDataSource {
       return supabaseClient.storage
           .from('magazine_pdf')
           .getPublicUrl(magazineModel.id);
+    } on PostgrestException catch (e) {
+      print(e.toString());
+      throw ServerException(message: e.message);
     } catch (e) {
+      print(e.toString());
       throw ServerException(message: e.toString());
     }
   }

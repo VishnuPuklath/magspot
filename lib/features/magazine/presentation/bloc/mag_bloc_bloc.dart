@@ -23,9 +23,10 @@ class MagBlocBloc extends Bloc<MagBlocEvent, MagBlocState> {
         authorname: event.authorname,
         description: event.description,
         file: event.file));
+
     res.fold(
-      (l) => MagBlocFailure(l.message),
-      (r) => MagBlocSuccess(magazine: r),
+      (l) => emit(MagBlocFailure(l.message)),
+      (r) => emit(MagBlocSuccess(magazine: r)),
     );
   }
 }

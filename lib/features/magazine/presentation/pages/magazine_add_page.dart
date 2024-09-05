@@ -7,6 +7,7 @@ import 'package:magspot/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:magspot/core/common/widgets/loader.dart';
 import 'package:magspot/core/utils/show_snack_bar.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
+import 'package:magspot/features/magazine/presentation/pages/bottom_nav_page.dart';
 import 'package:magspot/features/magazine/presentation/widgets/mag_button.dart';
 import 'package:magspot/features/magazine/presentation/widgets/mag_textform.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -56,7 +57,13 @@ class _MagazineAddPageState extends State<MagazineAddPage> {
             showSnackBar(context, state.error);
           }
           if (state is MagBlocSuccess) {
-            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BottomNavPage(),
+              ),
+              (route) => false,
+            );
           }
         },
         builder: (context, state) {
@@ -125,12 +132,14 @@ class _MagazineAddPageState extends State<MagazineAddPage> {
                                     as AppUserLoggedIn)
                                 .user
                                 .id;
+                            print('poster id is $posterId');
                             context.read<MagBlocBloc>().add(MagazineUpload(
                                 posterId: posterId,
                                 name: _nameController.text.trim(),
                                 authorname: _authorController.text.trim(),
                                 description: _descriptionController.text.trim(),
                                 file: _selectedPdf!));
+                            print('upload button executed');
                           }
                         })
                   ],

@@ -1,7 +1,7 @@
 class Magazine {
   final String id;
   final String name;
-  final String authorName;
+  final String authorname;
   final String description;
   final String file;
   final String posterId;
@@ -9,7 +9,7 @@ class Magazine {
     required this.id,
     required this.name,
     required this.posterId,
-    required this.authorName,
+    required this.authorname,
     required this.description,
     required this.file,
   });
