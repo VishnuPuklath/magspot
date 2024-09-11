@@ -16,6 +16,8 @@ class AuthRepositorImpl implements AuthRepository {
     try {
       final userModel = await remoteDataSource.loginWithEmailAndPassword(
           email: email, password: password);
+      print('final finale');
+      print(userModel.toJson());
       return right(userModel);
     } on ServerException catch (e) {
       return left(Failure(e.message));

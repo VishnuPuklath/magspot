@@ -22,7 +22,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
-
+  bool isPassword = true;
   final _passwordContoller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                   AuthField(
                     controller: _passwordContoller,
                     hintText: 'Password',
-                    isPassword: true,
+                    isPassword: isPassword,
                   ),
                   const SizedBox(
                     height: 20,

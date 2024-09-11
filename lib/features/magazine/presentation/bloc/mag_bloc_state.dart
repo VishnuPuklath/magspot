@@ -18,3 +18,9 @@ final class MagBlocSuccess extends MagBlocState {
 
   MagBlocSuccess({required this.magazine});
 }
+
+final class MagFetchAllSuccess extends MagBlocState {
+  final List<Magazine> magazines;
+
+  MagFetchAllSuccess({required this.magazines});
+}

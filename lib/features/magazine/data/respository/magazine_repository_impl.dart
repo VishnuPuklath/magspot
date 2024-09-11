@@ -16,6 +16,7 @@ class MagazineRepositoryImpl implements MagazineRepository {
   @override
   Future<Either<Failure, Magazine>> uploadMagazine(
       {required File pdf,
+      required File thumbnail,
       required String name,
       required String authorName,
       required String description,
@@ -27,12 +28,16 @@ class MagazineRepositoryImpl implements MagazineRepository {
           authorname: authorName,
           description: description,
           file: '',
-          posterId: posterId);
+          posterId: posterId,
+          thumbnail: '');
       print('impl le poster id is $posterId');
       final imageUrl = await magazineRemoteDataSource.uploadMagazinePdf(
           file: pdf, magazineModel: magazineModel);
+      final thumbnailUrl = await magazineRemoteDataSource.uploadThumbnail(
+          file: thumbnail, magazineModel: magazineModel);
 
-      magazineModel = magazineModel.copyWith(file: imageUrl);
+      magazineModel =
+          magazineModel.copyWith(file: imageUrl, thumbnail: thumbnailUrl);
       Map<String, dynamic> map = magazineModel.toMap();
       print('rep impl is $map');
       final magData =
@@ -40,6 +45,16 @@ class MagazineRepositoryImpl implements MagazineRepository {
       return right(magData);
     } on ServerException catch (e) {
       return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Magazine>>> getAllMagazine() async {
+    try {
+      final magaList = await magazineRemoteDataSource.getMagazine();
+      return right(magaList);
+    } on ServerException catch (e) {
+      return left(Failure(e.toString()));
     }
   }
 }

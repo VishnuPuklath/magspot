@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
@@ -10,7 +11,6 @@ import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
 import 'package:magspot/features/magazine/presentation/pages/bottom_nav_page.dart';
 import 'package:magspot/features/magazine/presentation/widgets/mag_button.dart';
 import 'package:magspot/features/magazine/presentation/widgets/mag_textform.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class MagazineAddPage extends StatefulWidget {
   const MagazineAddPage({super.key});
@@ -20,8 +20,15 @@ class MagazineAddPage extends StatefulWidget {
 }
 
 class _MagazineAddPageState extends State<MagazineAddPage> {
+  late final String posterId;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   final _formKey = GlobalKey<FormState>();
   File? _selectedPdf;
+  File? _selectedThumbnail;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
@@ -41,6 +48,24 @@ class _MagazineAddPageState extends State<MagazineAddPage> {
       }
     } catch (e) {
       print('Error picking PDF: ${e.toString()}');
+    }
+  }
+
+  Future<void> _pickThumbnail() async {
+    try {
+      final result = await FilePicker.platform
+          .pickFiles(type: FileType.custom, allowedExtensions: [
+        'jpg',
+        'jpeg',
+        'png',
+      ]);
+      if (result != null) {
+        setState(() {
+          _selectedThumbnail = File(result.files.single.path!);
+        });
+      }
+    } catch (e) {
+      print('Error while picking thumbnail: ${e.toString()}');
     }
   }
 
@@ -78,7 +103,7 @@ class _MagazineAddPageState extends State<MagazineAddPage> {
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: _pickPdf,
+                      onTap: _pickThumbnail,
                       child: DottedBorder(
                         borderType: BorderType.RRect,
                         radius: const Radius.circular(12),
@@ -89,15 +114,41 @@ class _MagazineAddPageState extends State<MagazineAddPage> {
                           width: double.infinity,
                           height: 200,
                           alignment: Alignment.center,
-                          child: _selectedPdf == null
-                              ? const Icon(Icons.insert_drive_file, size: 50)
+                          child: _selectedThumbnail == null
+                              ? const Text('Add your magazine thumbnail')
                               : SizedBox(
                                   width: double.infinity,
                                   height: 200,
-                                  child: SfPdfViewer.file(_selectedPdf!),
+                                  child: Image.file(
+                                    _selectedThumbnail!,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                         ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    InkWell(
+                      onTap: _pickPdf,
+                      child: _selectedPdf != null
+                          ? Text(
+                              _selectedPdf!.path,
+                              textAlign: TextAlign.center,
+                            )
+                          : Column(
+                              children: [
+                                TextButton(
+                                  child: const Icon(
+                                    Icons.picture_as_pdf,
+                                    size: 50,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                                const Text('Upload magazine')
+                              ],
+                            ),
                     ),
                     const SizedBox(
                       height: 15,
@@ -127,13 +178,15 @@ class _MagazineAddPageState extends State<MagazineAddPage> {
                         buttonText: 'Upload',
                         onPressed: () {
                           if (_formKey.currentState!.validate() &&
-                              _selectedPdf != null) {
+                              _selectedPdf != null &&
+                              _selectedThumbnail != null) {
                             final posterId = (context.read<AppUserCubit>().state
                                     as AppUserLoggedIn)
                                 .user
                                 .id;
                             print('poster id is $posterId');
                             context.read<MagBlocBloc>().add(MagazineUpload(
+                                thumbnail: _selectedThumbnail!,
                                 posterId: posterId,
                                 name: _nameController.text.trim(),
                                 authorname: _authorController.text.trim(),

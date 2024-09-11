@@ -29,9 +29,11 @@ class AuthDataRemoteDataSourceImpl implements AuthDataRemoteDataSource {
     try {
       final response = await supabaseClient.auth
           .signInWithPassword(email: email, password: password);
+
       if (response.user == null) {
         throw ServerException(message: 'User is null');
       }
+
       return UserModel.fromJson(response.user!.toJson());
     } catch (e) {
       throw ServerException(message: e.toString());

@@ -12,6 +12,7 @@ import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/magazine/data/datasources/remote_data_source.dart';
 import 'package:magspot/features/magazine/data/respository/magazine_repository_impl.dart';
 import 'package:magspot/features/magazine/domain/repository/magazine_repository.dart';
+import 'package:magspot/features/magazine/domain/usecases/get_all_magazine.dart';
 import 'package:magspot/features/magazine/domain/usecases/upload_magazine.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -75,7 +76,11 @@ void _initMag() {
     ..registerFactory(
       () => UploadMagazine(magazineRepository: serviceLocator()),
     )
+    ..registerFactory(
+      () => GetAllMagazine(magazineRepository: serviceLocator()),
+    )
     ..registerLazySingleton(
-      () => MagBlocBloc(serviceLocator()),
+      () => MagBlocBloc(
+          getAllMagazine: serviceLocator(), uploadMagazine: serviceLocator()),
     );
 }

@@ -14,6 +14,7 @@ class UploadMagazine implements Usecase<Magazine, UploadMagParams> {
   Future<Either<Failure, Magazine>> call(params) async {
     print('usecase executed');
     return await magazineRepository.uploadMagazine(
+      thumbnail: params.thumbnail,
       pdf: params.file,
       name: params.name,
       authorName: params.authorname,
@@ -29,9 +30,11 @@ class UploadMagParams {
   final String authorname;
   final String description;
   final File file;
+  final File thumbnail;
 
   UploadMagParams(
       {required this.posterId,
+      required this.thumbnail,
       required this.name,
       required this.authorname,
       required this.description,
