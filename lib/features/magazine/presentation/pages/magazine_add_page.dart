@@ -9,8 +9,8 @@ import 'package:magspot/core/common/widgets/loader.dart';
 import 'package:magspot/core/utils/show_snack_bar.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
 import 'package:magspot/features/magazine/presentation/pages/bottom_nav_page.dart';
-import 'package:magspot/features/magazine/presentation/widgets/mag_button.dart';
-import 'package:magspot/features/magazine/presentation/widgets/mag_textform.dart';
+import 'package:magspot/core/common/widgets/mag_button.dart';
+import 'package:magspot/core/common/widgets/mag_textform.dart';
 
 class MagazineAddPage extends StatefulWidget {
   const MagazineAddPage({super.key});

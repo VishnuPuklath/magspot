@@ -7,6 +7,7 @@ import 'package:magspot/core/utils/show_snack_bar.dart';
 import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/auth/presentation/pages/sign_in.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
+import 'package:magspot/features/magazine/presentation/pages/magazine_detail_page.dart';
 import 'package:magspot/features/magazine/presentation/widgets/mag_card.dart';
 
 class MagazinePage extends StatefulWidget {
@@ -70,7 +71,17 @@ class _MagazinePageState extends State<MagazinePage> {
               itemBuilder: (context, index) {
                 final magazine = state.magazines[index];
                 print(magazine.posterId);
-                return MagCard(magazine: magazine);
+                return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MagazineDetailPage(
+                              magazine: magazine,
+                            ),
+                          ));
+                    },
+                    child: MagCard(magazine: magazine));
               },
             );
           }

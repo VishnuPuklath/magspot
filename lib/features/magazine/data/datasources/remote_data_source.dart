@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:magspot/core/error/exceptions.dart';
 import 'package:magspot/features/magazine/data/models/magazine_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

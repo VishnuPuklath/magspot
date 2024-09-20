@@ -15,6 +15,11 @@ import 'package:magspot/features/magazine/domain/repository/magazine_repository.
 import 'package:magspot/features/magazine/domain/usecases/get_all_magazine.dart';
 import 'package:magspot/features/magazine/domain/usecases/upload_magazine.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
+import 'package:magspot/features/profile/data/datasource/profile_data_source.dart';
+import 'package:magspot/features/profile/data/repository/profile_repository_impl.dart';
+import 'package:magspot/features/profile/domain/repository/profile_repository.dart';
+import 'package:magspot/features/profile/domain/usecase/user_profile_updation.dart';
+import 'package:magspot/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final serviceLocator = GetIt.instance;
@@ -22,6 +27,7 @@ final serviceLocator = GetIt.instance;
 Future<void> intitDependencies() async {
   _initAuth();
   _initMag();
+  _initProfile();
   final supabase = await Supabase.initialize(
       url: AppSecrets.supabaseUrl, anonKey: AppSecrets.annonKey);
   serviceLocator.registerLazySingleton(
@@ -82,5 +88,23 @@ void _initMag() {
     ..registerLazySingleton(
       () => MagBlocBloc(
           getAllMagazine: serviceLocator(), uploadMagazine: serviceLocator()),
+    );
+}
+
+void _initProfile() {
+  serviceLocator
+    ..registerFactory<ProfileRemoteDataSource>(
+      () => ProfileDataSourceImpl(supabaseClient: serviceLocator()),
+    )
+    ..registerFactory<ProfileRepository>(
+      () => ProfileRepositoryImpl(profileDataSource: serviceLocator()),
+    )
+    ..registerFactory(
+      () => UserProfileUpdation(profileRepository: serviceLocator()),
+    )
+    ..registerLazySingleton(
+      () => ProfileBloc(
+          appusercubit: serviceLocator(),
+          userProfileUpdation: serviceLocator()),
     );
 }
