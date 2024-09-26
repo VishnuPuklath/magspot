@@ -24,3 +24,11 @@ final class MagFetchAllSuccess extends MagBlocState {
 
   MagFetchAllSuccess({required this.magazines});
 }
+
+final class MagLikeSuccess extends MagBlocState {}
+
+final class MagazineLikesUpdated extends MagBlocState {
+  final List<String> likes;
+
+  MagazineLikesUpdated({required this.likes});
+}

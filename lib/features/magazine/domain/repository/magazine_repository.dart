@@ -14,4 +14,9 @@ abstract interface class MagazineRepository {
     required String posterId,
   });
   Future<Either<Failure, List<Magazine>>> getAllMagazine();
+  Future<Either<Failure, void>> likeMagazine(
+      {required String magazineId, required String userId});
+
+  Future<Either<Failure, Stream<List<String>>>> subscribeToLikes(
+      {required String magazineId});
 }

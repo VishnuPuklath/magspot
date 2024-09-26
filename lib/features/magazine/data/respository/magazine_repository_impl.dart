@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:fpdart/src/either.dart';
 import 'package:magspot/core/error/exceptions.dart';
 import 'package:magspot/core/error/failure.dart';
@@ -54,7 +53,28 @@ class MagazineRepositoryImpl implements MagazineRepository {
       final magaList = await magazineRemoteDataSource.getMagazine();
       return right(magaList);
     } on ServerException catch (e) {
-      return left(Failure(e.toString()));
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> likeMagazine(
+      {required String magazineId, required String userId}) async {
+    try {
+      return right(
+          await magazineRemoteDataSource.likeMagazine(magazineId, userId));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Stream<List<String>>>> subscribeToLikes(
+      {required String magazineId}) async {
+    try {
+      return right(magazineRemoteDataSource.subscribeToLikes(magazineId));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
     }
   }
 }

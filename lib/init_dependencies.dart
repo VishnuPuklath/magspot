@@ -13,6 +13,8 @@ import 'package:magspot/features/magazine/data/datasources/remote_data_source.da
 import 'package:magspot/features/magazine/data/respository/magazine_repository_impl.dart';
 import 'package:magspot/features/magazine/domain/repository/magazine_repository.dart';
 import 'package:magspot/features/magazine/domain/usecases/get_all_magazine.dart';
+import 'package:magspot/features/magazine/domain/usecases/like_magazine.dart';
+import 'package:magspot/features/magazine/domain/usecases/subscribe_to_likes.dart';
 import 'package:magspot/features/magazine/domain/usecases/upload_magazine.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
 import 'package:magspot/features/profile/data/datasource/profile_data_source.dart';
@@ -85,9 +87,18 @@ void _initMag() {
     ..registerFactory(
       () => GetAllMagazine(magazineRepository: serviceLocator()),
     )
+    ..registerFactory(
+      () => LikeMagazineUseCase(magazineRepository: serviceLocator()),
+    )
+    ..registerFactory(
+      () => SubscribeToLikes(magazineRepository: serviceLocator()),
+    )
     ..registerLazySingleton(
       () => MagBlocBloc(
-          getAllMagazine: serviceLocator(), uploadMagazine: serviceLocator()),
+          subscribeToLikes: serviceLocator(),
+          likeMagazineUsecase: serviceLocator(),
+          getAllMagazine: serviceLocator(),
+          uploadMagazine: serviceLocator()),
     );
 }
 

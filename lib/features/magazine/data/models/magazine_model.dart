@@ -3,6 +3,8 @@ import 'package:magspot/features/magazine/domain/entities/magazine.dart';
 class MagazineModel extends Magazine {
   MagazineModel(
       {required super.id,
+      super.likes,
+      super.comments,
       required super.thumbnail,
       required super.name,
       required super.authorname,
@@ -19,11 +21,15 @@ class MagazineModel extends Magazine {
       'file': file,
       'posterid': posterId,
       'thumbnail': thumbnail,
+      'likes': likes,
+      'comments': comments
     };
   }
 
   factory MagazineModel.fromMap(Map<String, dynamic> map) {
     return MagazineModel(
+        comments: map['comments'] ?? [], // Cast to List<String>
+        likes: (map['likes'] as List<dynamic>?)?.cast<String>() ?? [],
         thumbnail: map['thumbnail'] ?? '',
         id: map['id'] ?? '',
         name: map['name'] ?? '',
@@ -40,16 +46,18 @@ class MagazineModel extends Magazine {
       String? file,
       String? posterId,
       String? posterName,
-      String? thumbnail}) {
+      String? thumbnail,
+      List}) {
     return MagazineModel(
-      thumbnail: thumbnail ?? this.thumbnail,
-      id: id ?? this.id,
-      posterName: posterName ?? this.posterName,
-      name: name ?? this.name,
-      authorname: authorname ?? this.authorname,
-      description: description ?? this.description,
-      file: file ?? this.file,
-      posterId: posterId ?? this.posterId,
-    );
+        thumbnail: thumbnail ?? this.thumbnail,
+        id: id ?? this.id,
+        posterName: posterName ?? this.posterName,
+        name: name ?? this.name,
+        authorname: authorname ?? this.authorname,
+        description: description ?? this.description,
+        file: file ?? this.file,
+        posterId: posterId ?? this.posterId,
+        comments: comments ?? this.comments,
+        likes: likes ?? this.likes);
   }
 }

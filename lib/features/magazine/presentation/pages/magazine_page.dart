@@ -70,6 +70,9 @@ class _MagazinePageState extends State<MagazinePage> {
               itemCount: state.magazines.length,
               itemBuilder: (context, index) {
                 final magazine = state.magazines[index];
+                context
+                    .read<MagBlocBloc>()
+                    .add(SubscribeToLikesEvent(magazineId: magazine.id));
                 print(magazine.posterId);
                 return GestureDetector(
                     onTap: () {
@@ -85,7 +88,7 @@ class _MagazinePageState extends State<MagazinePage> {
               },
             );
           }
-          return SizedBox();
+          return const SizedBox();
         },
       ),
     );

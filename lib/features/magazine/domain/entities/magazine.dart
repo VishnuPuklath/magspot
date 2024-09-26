@@ -1,3 +1,5 @@
+import 'package:magspot/features/magazine/domain/entities/comment.dart';
+
 class Magazine {
   final String id;
   final String name;
@@ -7,7 +9,11 @@ class Magazine {
   final String thumbnail;
   final String posterId;
   final String? posterName;
+  final List<String>? likes;
+  List<Comment>? comments;
   Magazine({
+    this.likes,
+    this.comments,
     required this.thumbnail,
     required this.id,
     required this.name,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:magspot/core/error/exceptions.dart';
 import 'package:magspot/features/magazine/data/models/magazine_model.dart';
@@ -11,6 +12,8 @@ abstract interface class MagazineRemoteDataSource {
   Future<String> uploadThumbnail(
       {required File file, required MagazineModel magazineModel});
   Future<List<MagazineModel>> getMagazine();
+  Future<void> likeMagazine(String magazineId, String userId);
+  Stream<List<String>> subscribeToLikes(String magazineId);
 }
 
 class MagazineRemoteDataSourceImpl implements MagazineRemoteDataSource {
@@ -69,8 +72,10 @@ class MagazineRemoteDataSourceImpl implements MagazineRemoteDataSource {
           )
           .toList();
     } on PostgrestException catch (e) {
+      print(e.toString());
       throw ServerException(message: e.toString());
     } catch (e) {
+      print(e.toString());
       throw ServerException(message: e.toString());
     }
   }
@@ -90,6 +95,63 @@ class MagazineRemoteDataSourceImpl implements MagazineRemoteDataSource {
       throw ServerException(message: e.message);
     } catch (e) {
       print(e.toString());
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> likeMagazine(String magazineId, String userId) async {
+    try {
+      final data = await supabaseClient
+          .from('magazine')
+          .select('likes')
+          .eq('id', magazineId)
+          .single();
+
+      List<dynamic> likes = data['likes'] ?? [];
+
+      if (likes.contains(userId)) {
+        likes.remove(userId);
+      } else {
+        likes.add(userId);
+      }
+      await supabaseClient
+          .from('magazine')
+          .update({'likes': likes}).eq('id', magazineId);
+    } on PostgrestException catch (e) {
+      print(e.toString());
+      throw ServerException(message: e.message);
+    } catch (e) {
+      print(e.toString());
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Stream<List<String>> subscribeToLikes(String magazineId) {
+    try {
+      final StreamController<List<String>> controller = StreamController();
+
+      final subscription = supabaseClient
+          .from('magazine')
+          .stream(primaryKey: ['id'])
+          .eq('id', magazineId)
+          .listen((List<Map<String, dynamic>> updates) {
+            if (updates.isNotEmpty) {
+              final updatedLikes = List<String>.from(updates.first['likes']);
+              controller.add(updatedLikes);
+            }
+          });
+
+      // Cancel the subscription when the stream is closed
+      controller.onCancel = () {
+        subscription.cancel();
+      };
+
+      return controller.stream;
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.toString());
+    } catch (e) {
       throw ServerException(message: e.toString());
     }
   }

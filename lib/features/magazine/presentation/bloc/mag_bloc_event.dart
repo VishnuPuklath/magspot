@@ -21,3 +21,16 @@ final class MagazineUpload extends MagBlocEvent {
 }
 
 final class MagazineGetAllEvent extends MagBlocEvent {}
+
+final class LikeMagazine extends MagBlocEvent {
+  final String magazineId;
+  final String userId;
+
+  LikeMagazine({required this.magazineId, required this.userId});
+}
+
+final class SubscribeToLikesEvent extends MagBlocEvent {
+  final String magazineId;
+
+  SubscribeToLikesEvent({required this.magazineId});
+}
