@@ -28,8 +28,11 @@ class MagazineModel extends Magazine {
 
   factory MagazineModel.fromMap(Map<String, dynamic> map) {
     return MagazineModel(
-        comments: map['comments'] ?? [], // Cast to List<String>
-        likes: (map['likes'] as List<dynamic>?)?.cast<String>() ?? [],
+        comments: map['comments'] ?? [],
+        likes: (map['likes'] as List<dynamic>?)
+                ?.map((item) => item.toString())
+                .toList() ??
+            [],
         thumbnail: map['thumbnail'] ?? '',
         id: map['id'] ?? '',
         name: map['name'] ?? '',

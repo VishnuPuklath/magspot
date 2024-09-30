@@ -29,6 +29,7 @@ final class MagLikeSuccess extends MagBlocState {}
 
 final class MagazineLikesUpdated extends MagBlocState {
   final List<String> likes;
+  final String magazineId;
 
-  MagazineLikesUpdated({required this.likes});
+  MagazineLikesUpdated({required this.likes, required this.magazineId});
 }

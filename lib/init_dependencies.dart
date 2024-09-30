@@ -16,13 +16,15 @@ import 'package:magspot/features/magazine/domain/usecases/get_all_magazine.dart'
 import 'package:magspot/features/magazine/domain/usecases/like_magazine.dart';
 import 'package:magspot/features/magazine/domain/usecases/subscribe_to_likes.dart';
 import 'package:magspot/features/magazine/domain/usecases/upload_magazine.dart';
-import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
+import 'package:magspot/features/magazine/presentation/bloc/mag_bloc/mag_bloc_bloc.dart';
 import 'package:magspot/features/profile/data/datasource/profile_data_source.dart';
 import 'package:magspot/features/profile/data/repository/profile_repository_impl.dart';
 import 'package:magspot/features/profile/domain/repository/profile_repository.dart';
 import 'package:magspot/features/profile/domain/usecase/user_profile_updation.dart';
 import 'package:magspot/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'features/magazine/presentation/bloc/like_bloc/like_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -94,8 +96,12 @@ void _initMag() {
       () => SubscribeToLikes(magazineRepository: serviceLocator()),
     )
     ..registerLazySingleton(
+      () => LikeBloc(
+          likeMagazineUsecase: serviceLocator(),
+          subscribeToLikes: serviceLocator()),
+    )
+    ..registerLazySingleton(
       () => MagBlocBloc(
-          subscribeToLikes: serviceLocator(),
           likeMagazineUsecase: serviceLocator(),
           getAllMagazine: serviceLocator(),
           uploadMagazine: serviceLocator()),

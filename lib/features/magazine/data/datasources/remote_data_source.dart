@@ -107,6 +107,7 @@ class MagazineRemoteDataSourceImpl implements MagazineRemoteDataSource {
           .select('likes')
           .eq('id', magazineId)
           .single();
+      print(data['likes']);
 
       List<dynamic> likes = data['likes'] ?? [];
 

@@ -6,7 +6,7 @@ import 'package:magspot/core/utils/show_snack_bar.dart';
 
 import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/auth/presentation/pages/sign_in.dart';
-import 'package:magspot/features/magazine/presentation/bloc/mag_bloc_bloc.dart';
+import 'package:magspot/features/magazine/presentation/bloc/mag_bloc/mag_bloc_bloc.dart';
 import 'package:magspot/features/magazine/presentation/pages/magazine_detail_page.dart';
 import 'package:magspot/features/magazine/presentation/widgets/mag_card.dart';
 
@@ -70,18 +70,17 @@ class _MagazinePageState extends State<MagazinePage> {
               itemCount: state.magazines.length,
               itemBuilder: (context, index) {
                 final magazine = state.magazines[index];
-                context
-                    .read<MagBlocBloc>()
-                    .add(SubscribeToLikesEvent(magazineId: magazine.id));
+                // context
+                //     .read<MagBlocBloc>()
+                //     .add(SubscribeToLikesEvent(magazineId: magazine.id));
                 print(magazine.posterId);
                 return GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MagazineDetailPage(
-                              magazine: magazine,
-                            ),
+                            builder: (context) =>
+                                MagazineDetailPage(magazine: magazine),
                           ));
                     },
                     child: MagCard(magazine: magazine));
