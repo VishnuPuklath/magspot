@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:magspot/core/error/exceptions.dart';
+import 'package:magspot/features/magazine/data/models/comment_model.dart';
 import 'package:magspot/features/magazine/data/models/magazine_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,6 +15,8 @@ abstract interface class MagazineRemoteDataSource {
   Future<List<MagazineModel>> getMagazine();
   Future<void> likeMagazine(String magazineId, String userId);
   Stream<List<String>> subscribeToLikes(String magazineId);
+  Future<void> addComment(String magazineId, String userId, String commentText);
+  Future<List<CommentModel>> getComments(String magazineId);
 }
 
 class MagazineRemoteDataSourceImpl implements MagazineRemoteDataSource {
@@ -152,6 +155,49 @@ class MagazineRemoteDataSourceImpl implements MagazineRemoteDataSource {
       return controller.stream;
     } on PostgrestException catch (e) {
       throw ServerException(message: e.toString());
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> addComment(
+      String magazineId, String userId, String commentText) async {
+    try {
+      await supabaseClient.from('comments').insert({
+        'magazine_id': magazineId,
+        'user_id': userId,
+        'comment_text': commentText,
+      });
+    } on PostgrestException catch (e) {
+      print(e.toString());
+      throw ServerException(message: e.toString());
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<CommentModel>> getComments(String magazineId) async {
+    try {
+      final response = await supabaseClient
+          .from('comments')
+          .select('*, profiles(name)')
+          .eq('magazine_id', magazineId)
+          .order('created_at', ascending: true);
+
+      return response.map<CommentModel>((comment) {
+        return CommentModel(
+          id: comment['id'],
+          magazineId: comment['magazine_id'],
+          userId: comment['user_id'],
+          userName: comment['profiles']['name'],
+          commentText: comment['comment_text'],
+          createdAt: DateTime.parse(comment['created_at']),
+        );
+      }).toList();
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());
     }

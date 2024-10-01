@@ -4,6 +4,7 @@ import 'package:magspot/core/error/exceptions.dart';
 import 'package:magspot/core/error/failure.dart';
 import 'package:magspot/features/magazine/data/datasources/remote_data_source.dart';
 import 'package:magspot/features/magazine/data/models/magazine_model.dart';
+import 'package:magspot/features/magazine/domain/entities/comment.dart';
 import 'package:magspot/features/magazine/domain/entities/magazine.dart';
 import 'package:magspot/features/magazine/domain/repository/magazine_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -69,10 +70,37 @@ class MagazineRepositoryImpl implements MagazineRepository {
   }
 
   @override
-  Future<Either<Failure, Stream<List<String>>>> subscribeToLikes(
-      {required String magazineId}) async {
+  Stream<Either<Failure, List<String>>> subscribeToLikes(
+      {required String magazineId}) async* {
     try {
-      return right(magazineRemoteDataSource.subscribeToLikes(magazineId));
+      final stream = magazineRemoteDataSource.subscribeToLikes(magazineId);
+      await for (final likes in stream) {
+        yield Right(likes);
+      }
+    } on ServerException catch (e) {
+      yield Left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> addComment(
+      {required String magazineId,
+      required String userId,
+      required String commentText}) async {
+    try {
+      await magazineRemoteDataSource.addComment(
+          magazineId, userId, commentText);
+      return right(null);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Comment>>> getComments(String magazineId) async {
+    try {
+      final comments = await magazineRemoteDataSource.getComments(magazineId);
+      return right(comments);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }

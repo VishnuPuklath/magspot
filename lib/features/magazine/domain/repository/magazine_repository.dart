@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:magspot/core/error/failure.dart';
+import 'package:magspot/features/magazine/domain/entities/comment.dart';
 import 'package:magspot/features/magazine/domain/entities/magazine.dart';
 
 abstract interface class MagazineRepository {
@@ -16,6 +17,12 @@ abstract interface class MagazineRepository {
   Future<Either<Failure, List<Magazine>>> getAllMagazine();
   Future<Either<Failure, void>> likeMagazine(
       {required String magazineId, required String userId});
-  Future<Either<Failure, Stream<List<String>>>> subscribeToLikes(
+  Stream<Either<Failure, List<String>>> subscribeToLikes(
       {required String magazineId});
+  Future<Either<Failure, void>> addComment({
+    required String magazineId,
+    required String userId,
+    required String commentText,
+  });
+  Future<Either<Failure, List<Comment>>> getComments(String magazineId);
 }

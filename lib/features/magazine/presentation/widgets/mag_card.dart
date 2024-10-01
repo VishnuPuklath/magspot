@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:magspot/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:magspot/features/magazine/domain/entities/magazine.dart';
 import 'package:magspot/features/magazine/presentation/bloc/like_bloc/like_bloc.dart';
+import 'package:magspot/features/magazine/presentation/widgets/comment_bottom_sheet.dart';
 
 class MagCard extends StatelessWidget {
   final Magazine magazine;
@@ -15,6 +16,7 @@ class MagCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('buildno build');
     // Get the user ID from AppUserCubit
     final state = context.read<AppUserCubit>().state as AppUserLoggedIn;
     final userId = state.user.id;
@@ -29,7 +31,7 @@ class MagCard extends StatelessWidget {
         // Default values
         bool isLiked = magazine.likes!.contains(userId);
         int totalLikes = magazine.likes!.length;
-
+        int magazineCount = magazine.comments!.length;
         // Update like status and count based on LikeUpdatedState
         if (likeState is LikeUpdatedState) {
           totalLikes = likeState.likes.length;
@@ -107,13 +109,14 @@ class MagCard extends StatelessWidget {
                           children: [
                             IconButton(
                               onPressed: () {
-                                // Add your comment functionality here
+                                _showCommentsBottomSheet(
+                                    context, magazine.id, userId);
                               },
                               icon: const Icon(Icons.comment_sharp),
                             ),
-                            const Text(
-                              '0',
-                              style: TextStyle(color: Colors.black),
+                            Text(
+                              magazineCount.toString(),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ],
                         ),
@@ -123,6 +126,24 @@ class MagCard extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showCommentsBottomSheet(
+      BuildContext context, String magazineId, String userId) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // allows the bottom sheet to cover more space
+      builder: (context) {
+        return Padding(
+          padding:
+              MediaQuery.of(context).viewInsets, // To avoid keyboard overlap
+          child: CommentBottomSheet(
+            userId: userId,
+            magazineId: magazineId,
           ),
         );
       },

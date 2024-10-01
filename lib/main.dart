@@ -4,6 +4,7 @@ import 'package:magspot/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:magspot/core/theme/theme.dart';
 import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/auth/presentation/pages/sign_in.dart';
+import 'package:magspot/features/magazine/presentation/bloc/comment_bloc/comment_bloc.dart';
 import 'package:magspot/features/magazine/presentation/bloc/like_bloc/like_bloc.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc/mag_bloc_bloc.dart';
 import 'package:magspot/features/magazine/presentation/pages/bottom_nav_page.dart';
@@ -29,6 +30,9 @@ void main() async {
     ),
     BlocProvider(
       create: (_) => serviceLocator<LikeBloc>(),
+    ),
+    BlocProvider(
+      create: (_) => serviceLocator<CommentBloc>(),
     )
   ], child: MyApp()));
 }

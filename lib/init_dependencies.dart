@@ -12,10 +12,13 @@ import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/magazine/data/datasources/remote_data_source.dart';
 import 'package:magspot/features/magazine/data/respository/magazine_repository_impl.dart';
 import 'package:magspot/features/magazine/domain/repository/magazine_repository.dart';
+import 'package:magspot/features/magazine/domain/usecases/add_comment.dart';
 import 'package:magspot/features/magazine/domain/usecases/get_all_magazine.dart';
+import 'package:magspot/features/magazine/domain/usecases/get_comments.dart';
 import 'package:magspot/features/magazine/domain/usecases/like_magazine.dart';
 import 'package:magspot/features/magazine/domain/usecases/subscribe_to_likes.dart';
 import 'package:magspot/features/magazine/domain/usecases/upload_magazine.dart';
+import 'package:magspot/features/magazine/presentation/bloc/comment_bloc/comment_bloc.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc/mag_bloc_bloc.dart';
 import 'package:magspot/features/profile/data/datasource/profile_data_source.dart';
 import 'package:magspot/features/profile/data/repository/profile_repository_impl.dart';
@@ -94,6 +97,17 @@ void _initMag() {
     )
     ..registerFactory(
       () => SubscribeToLikes(magazineRepository: serviceLocator()),
+    )
+    ..registerFactory(
+      () => AddCommentUsecase(magazineRepository: serviceLocator()),
+    )
+    ..registerFactory(
+      () => GetCommentsUseCase(magazineRepository: serviceLocator()),
+    )
+    ..registerLazySingleton(
+      () => CommentBloc(
+          addCommentUseCase: serviceLocator(),
+          getCommentUseCase: serviceLocator()),
     )
     ..registerLazySingleton(
       () => LikeBloc(

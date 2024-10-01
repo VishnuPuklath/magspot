@@ -6,3 +6,7 @@ abstract interface class Usecase<SuccessType, Params> {
 }
 
 class NoParams {}
+
+abstract interface class StreamUsecase<SuccessType, Params> {
+  Stream<Either<Failure, SuccessType>> call(Params params);
+}

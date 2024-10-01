@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:magspot/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:magspot/core/common/widgets/loader.dart';
 import 'package:magspot/core/utils/show_snack_bar.dart';
-
 import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/auth/presentation/pages/sign_in.dart';
 import 'package:magspot/features/magazine/presentation/bloc/mag_bloc/mag_bloc_bloc.dart';
@@ -70,9 +69,7 @@ class _MagazinePageState extends State<MagazinePage> {
               itemCount: state.magazines.length,
               itemBuilder: (context, index) {
                 final magazine = state.magazines[index];
-                // context
-                //     .read<MagBlocBloc>()
-                //     .add(SubscribeToLikesEvent(magazineId: magazine.id));
+
                 print(magazine.posterId);
                 return GestureDetector(
                     onTap: () {
