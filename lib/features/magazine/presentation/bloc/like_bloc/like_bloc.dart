@@ -56,7 +56,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
           (likes) {
             // Emit updated state with new likes
             print('New likes received: $likes'); // Log the likes
-            return LikeUpdatedState(likes: List.from(likes));
+            return LikeUpdatedState(likes: List.from(likes), event.magazineId);
           },
         );
       },

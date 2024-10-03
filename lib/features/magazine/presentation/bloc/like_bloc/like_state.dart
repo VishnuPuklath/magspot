@@ -15,6 +15,6 @@ final class LikeFailureState extends LikeState {
 
 final class LikeUpdatedState extends LikeState {
   final List<String> likes;
-
-  LikeUpdatedState({required this.likes});
+  final String magazineId;
+  LikeUpdatedState(this.magazineId, {required this.likes});
 }

@@ -18,3 +18,9 @@ class CommentError extends CommentState {
 
   CommentError(this.message);
 }
+
+class CommentsCountLoaded extends CommentState {
+  final int count;
+  final String magazineId;
+  CommentsCountLoaded(this.magazineId, {required this.count});
+}

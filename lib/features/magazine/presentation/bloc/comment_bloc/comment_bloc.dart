@@ -11,15 +11,17 @@ part 'comment_state.dart';
 class CommentBloc extends Bloc<CommentEvent, CommentState> {
   final AddCommentUsecase _addCommentUseCase;
   final GetCommentsUseCase _getCommentsUseCase;
-  CommentBloc(
-      {required AddCommentUsecase addCommentUseCase,
-      required GetCommentsUseCase getCommentUseCase})
-      : _addCommentUseCase = addCommentUseCase,
+
+  CommentBloc({
+    required AddCommentUsecase addCommentUseCase,
+    required GetCommentsUseCase getCommentUseCase,
+  })  : _addCommentUseCase = addCommentUseCase,
         _getCommentsUseCase = getCommentUseCase,
         super(CommentInitial()) {
     on<CommentEvent>((event, emit) {});
     on<AddCommentEvent>(_onAddComment);
     on<GetCommentsEvent>(_onGetComments);
+    on<LoadInitialCommentCountEvent>(_onLoadInitialCommentCount);
   }
 
   Future<void> _onAddComment(
@@ -29,11 +31,21 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
       userId: event.userId,
       commentText: event.commentText,
     ));
+    res.fold((failure) => emit(CommentError(failure.message)), (_) {
+      add(GetCommentsEvent(event.magazineId)); // Fetch updated comments
+    });
+  }
+
+  Future<void> _onLoadInitialCommentCount(
+    LoadInitialCommentCountEvent event,
+    Emitter<CommentState> emit,
+  ) async {
+    final res = await _getCommentsUseCase(event.magazineId);
     res.fold(
       (failure) => emit(CommentError(failure.message)),
-      (_) => add(
-        GetCommentsEvent(event.magazineId),
-      ),
+      (comments) {
+        emit(CommentsCountLoaded(count: comments.length, event.magazineId));
+      },
     );
   }
 
@@ -41,7 +53,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     GetCommentsEvent event,
     Emitter<CommentState> emit,
   ) async {
-    emit(CommentsLoading());
+    // Emit loading state
     final res = await _getCommentsUseCase(event.magazineId);
     res.fold(
       (failure) => emit(CommentError(failure.message)),

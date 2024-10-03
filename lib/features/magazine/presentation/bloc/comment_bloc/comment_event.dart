@@ -20,3 +20,9 @@ class GetCommentsEvent extends CommentEvent {
 
   GetCommentsEvent(this.magazineId);
 }
+
+class LoadInitialCommentCountEvent extends CommentEvent {
+  final String magazineId;
+
+  LoadInitialCommentCountEvent(this.magazineId);
+}
