@@ -30,6 +30,7 @@ class AuthRepositorImpl implements AuthRepository {
       required String email,
       required String password}) async {
     try {
+      print('in the repo');
       final userModel = await remoteDataSource.signUpWithEmailAndPassword(
           name: name, email: email, password: password);
       return right(userModel);

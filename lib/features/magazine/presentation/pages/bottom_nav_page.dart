@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:magspot/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:magspot/core/theme/app_pallete.dart';
 import 'package:magspot/features/magazine/presentation/pages/magazine_add_page.dart';
 import 'package:magspot/features/magazine/presentation/pages/magazine_page.dart';
@@ -16,6 +18,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
   List<Widget> pages = [MagazinePage(), ProfilePage()];
   @override
   Widget build(BuildContext context) {
+    final user = context.read<AppUserCubit>().state as AppUserLoggedIn;
     return Scaffold(
       body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -35,20 +38,26 @@ class _BottomNavPageState extends State<BottomNavPage> {
           });
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        foregroundColor: AppPallete.backgroundColor,
-        backgroundColor: AppPallete.gradient4,
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MagazineAddPage(),
-              ));
+      floatingActionButton: BlocBuilder<AppUserCubit, AppUserState>(
+        builder: (context, state) {
+          return user.user.type == 'admin'
+              ? FloatingActionButton(
+                  foregroundColor: AppPallete.backgroundColor,
+                  backgroundColor: AppPallete.gradient4,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MagazineAddPage(),
+                        ));
+                  },
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.black,
+                  ),
+                )
+              : const SizedBox();
         },
-        child: const Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

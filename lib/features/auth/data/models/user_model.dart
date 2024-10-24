@@ -4,12 +4,14 @@ class UserModel extends User {
   UserModel(
       {required super.id,
       required super.email,
+      required super.type,
       required super.name,
       super.bio,
       super.profilePic});
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
+        type: map['type'] ?? 'user',
         id: map['id'] ?? '',
         email: map['email'] ?? '',
         name: map['name'] ?? '',
@@ -23,7 +25,8 @@ class UserModel extends User {
       'name': name,
       'email': email,
       'profilePic': profilePic,
-      'bio': bio
+      'bio': bio,
+      'type': type
     };
   }
 
@@ -32,8 +35,10 @@ class UserModel extends User {
       String? email,
       String? name,
       String? bio,
+      String? type,
       String? profilePic}) {
     return UserModel(
+        type: type ?? this.type,
         id: id ?? this.id,
         email: email ?? this.email,
         name: name ?? this.name,

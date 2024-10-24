@@ -28,31 +28,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _appUserCubit = appUserCubit,
         _userSignout = userSignOut,
         super(AuthInitial()) {
-    on<AuthEvent>((_, emit) => emit(AuthLoading()));
     on<AuthSignUp>(_onAuthSignUp);
     on<AuthLogin>(_onAuthLogin);
     on<AuthIsUserLoggedIn>(_isUserLoggedIn);
     on<AuthUserSIgnout>(_onUserSignOut);
   }
 
-  void _onAuthSignUp(AuthSignUp event, Emitter emit) {
-    (event, emit) async {
-      final res = await _userSignUp(
-        UserSignUpParams(
-          name: event.name,
-          email: event.email,
-          password: event.password,
-        ),
-      );
-      res.fold((l) => emit(AuthFailure(message: l.message)),
-          (user) => _authEmitSuccess(user, emit));
-    };
+  void _onAuthSignUp(AuthSignUp event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    final res = await _userSignUp(
+      UserSignUpParams(
+        name: event.name,
+        email: event.email,
+        password: event.password,
+      ),
+    );
+    res.fold((l) => emit(AuthFailure(message: l.message)),
+        (user) => _authEmitSuccess(user, emit));
   }
 
   void _onAuthLogin(
     AuthLogin event,
     Emitter<AuthState> emit,
   ) async {
+    emit(AuthLoading());
     final res = await _userLogin(
         UserLoginParams(email: event.email, password: event.password));
     res.fold((l) => AuthFailure(message: l.message), (user) {

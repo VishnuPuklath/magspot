@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:magspot/features/magazine/domain/entities/comment.dart';
 import 'package:magspot/features/magazine/domain/usecases/add_comment.dart';
 import 'package:magspot/features/magazine/domain/usecases/get_comments.dart';
-
 part 'comment_event.dart';
 part 'comment_state.dart';
 

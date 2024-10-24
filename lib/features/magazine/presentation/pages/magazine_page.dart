@@ -28,9 +28,9 @@ class _MagazinePageState extends State<MagazinePage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          BlocListener<AuthBloc, AuthState>(
+          BlocListener<AppUserCubit, AppUserState>(
             listener: (context, state) {
-              if (state is AuthInitial) {
+              if (state is AppUserInitial) {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(

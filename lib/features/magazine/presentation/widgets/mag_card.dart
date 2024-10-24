@@ -89,10 +89,6 @@ class MagCard extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Text(
-                          'Magazine name: ${magazine.name}',
-                          style: const TextStyle(color: Colors.black),
-                        ),
                         Row(
                           children: [
                             Column(

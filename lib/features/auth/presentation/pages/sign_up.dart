@@ -7,6 +7,7 @@ import 'package:magspot/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:magspot/features/auth/presentation/pages/sign_in.dart';
 import 'package:magspot/features/auth/presentation/widgets/auth_field.dart';
 import 'package:magspot/features/auth/presentation/widgets/auth_gradient_button.dart';
+import 'package:magspot/features/magazine/presentation/pages/bottom_nav_page.dart';
 
 class SignUpPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -38,6 +39,15 @@ class _SignUpPageState extends State<SignUpPage> {
         listener: (context, state) {
           if (state is AuthFailure) {
             showSnackBar(context, state.message);
+          }
+          if (state is AuthSuccess) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BottomNavPage(),
+              ),
+              (route) => false,
+            );
           }
         },
         builder: (context, state) {
